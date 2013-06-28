@@ -5,6 +5,7 @@ Release:    6
 Group:      System/API
 License:    Apache-2.0
 Source0:    %{name}-%{version}.tar.gz
+Source1001: 	capi-system-media-key.manifest
 BuildRequires:  cmake
 BuildRequires:  pkgconfig(dlog)
 BuildRequires:  pkgconfig(vconf)
@@ -27,6 +28,7 @@ Requires: %{name} = %{version}-%{release}
 
 %prep
 %setup -q
+cp %{SOURCE1001} .
 
 %build
 MAJORVER=`echo %{version} | awk 'BEGIN {FS="."}{print $1}'`
@@ -42,11 +44,13 @@ make %{?jobs:-j%jobs}
 %postun -p /sbin/ldconfig
 
 %files
+%manifest %{name}.manifest
 %license  LICENSE
 %{_libdir}/libcapi-system-media-key.so.*
 %manifest capi-system-media-key.manifest
 
 %files devel
+%manifest %{name}.manifest
 %{_includedir}/system/media_key.h
 %{_libdir}/pkgconfig/*.pc
 %{_libdir}/libcapi-system-media-key.so
