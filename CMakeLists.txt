@@ -10,8 +10,20 @@ SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 SET(INC_DIR include)
 INCLUDE_DIRECTORIES(${INC_DIR})
 
+IF(X11_SUPPORT)
 SET(requires "dlog capi-base-common aul utilX")
+ELSEIF(WAYLAND_SUPPORT)
+SET(requires "dlog capi-base-common aul")
+ENDIF(X11_SUPPORT)
 SET(pc_requires "capi-base-common")
+
+IF(WAYLAND_SUPPORT)
+ ADD_DEFINITIONS("-DUSE_WAYLAND")
+ENDIF(WAYLAND_SUPPORT)
+
+IF(X11_SUPPORT)
+ ADD_DEFINITIONS("-DUSE_X11")
+ENDIF(WAYLAND_SUPPORT)
 
 INCLUDE(FindPkgConfig)
 pkg_check_modules(${fw_name} REQUIRED ${requires})
