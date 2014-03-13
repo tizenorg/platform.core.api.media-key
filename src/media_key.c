@@ -18,7 +18,7 @@
 #include <aul.h>
 #include <media_key.h>
 #include <string.h>
-#include <utilX.h>
+#include <efl_util.h>
 #include <dlog.h>
 
 #ifdef LOG_TAG

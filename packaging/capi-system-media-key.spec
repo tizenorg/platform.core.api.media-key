@@ -11,8 +11,7 @@ BuildRequires:  pkgconfig(dlog)
 BuildRequires:  pkgconfig(vconf)
 BuildRequires:  pkgconfig(capi-base-common)
 BuildRequires:  pkgconfig(aul)
-BuildRequires:  pkgconfig(x11)
-BuildRequires:  pkgconfig(utilX)
+BuildRequires:  pkgconfig(capi-ui-efl-util)
 
 %description
 %{summary}.
