@@ -1,3 +1,6 @@
+%bcond_with x
+%bcond_with wayland
+
 Name:       capi-system-media-key
 Summary:    A System Information library in SLP C API
 Version:    0.1.0
@@ -11,7 +14,10 @@ BuildRequires:  pkgconfig(dlog)
 BuildRequires:  pkgconfig(vconf)
 BuildRequires:  pkgconfig(capi-base-common)
 BuildRequires:  pkgconfig(aul)
-BuildRequires:  pkgconfig(capi-ui-efl-util)
+%if %{with x}
+BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(utilX)
+%endif
 
 %description
 %{summary}.
@@ -31,7 +37,13 @@ cp %{SOURCE1001} .
 
 %build
 MAJORVER=`echo %{version} | awk 'BEGIN {FS="."}{print $1}'`
-%cmake . -DFULLVER=%{version} -DMAJORVER=${MAJORVER}
+%cmake . -DFULLVER=%{version} -DMAJORVER=${MAJORVER} \
+%if %{with wayland}
+-DWITH_WAYLAND=TRUE
+%endif
+%if %{with x}
+-DWITH_X11=TRUE
+%endif
 
 make %{?jobs:-j%jobs}
 

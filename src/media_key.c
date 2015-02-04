@@ -18,7 +18,9 @@
 #include <aul.h>
 #include <media_key.h>
 #include <string.h>
-#include <efl_util.h>
+#if X11
+#include <utilX.h>
+#endif
 #include <dlog.h>
 
 #ifdef LOG_TAG
@@ -47,6 +49,7 @@ static int __aul_key_handler(bundle *b, void *data)
 	key_str = (char *)bundle_get_val(b, AUL_K_MULTI_KEY);
 	event_str = (char *)bundle_get_val(b, AUL_K_MULTI_KEY_EVENT);
 
+#if X11
 	if (!strcmp(key_str, KEY_PLAYCD)) {
 		key = MEDIA_KEY_PLAY;
 	} else if (!strcmp(key_str, KEY_STOPCD)) {
@@ -62,6 +65,9 @@ static int __aul_key_handler(bundle *b, void *data)
 	} else if (!strcmp(key_str, KEY_FASTFORWARD)) {
 		key = MEDIA_KEY_FASTFORWARD;
 	}
+#else
+	LOGE("[%s] not implemented for wayland", __FUNCTION__);
+#endif
 
 	if (!strcmp(event_str, AUL_V_KEY_RELEASED)) {
 		event = MEDIA_KEY_STATUS_RELEASED;
