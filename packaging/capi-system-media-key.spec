@@ -11,9 +11,11 @@ Source0:    %{name}-%{version}.tar.gz
 Source1001: 	capi-system-media-key.manifest
 BuildRequires:  cmake
 BuildRequires:  pkgconfig(dlog)
-BuildRequires:  pkgconfig(vconf)
 BuildRequires:  pkgconfig(capi-base-common)
-BuildRequires:  pkgconfig(aul)
+BuildRequires:  pkgconfig(ecore)
+BuildRequires:  pkgconfig(ecore-input)
+BuildRequires:  pkgconfig(evas)
+
 %if %{with x}
 BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(utilX)
