@@ -21,8 +21,9 @@
 #include <Evas.h>
 #include <Ecore.h>
 #include <Ecore_Input.h>
-#if X11
+#if defined(X11)
 #include <Ecore_X.h>
+#include <utilX.h>
 #endif
 
 #include <dlog.h>
@@ -60,7 +61,7 @@ static int _media_key_initialized;
 static Ecore_Event_Handler *media_key_up;
 static Ecore_Event_Handler *media_key_down;
 
-#if X11
+#if defined(X11)
 static Ecore_X_Window win;
 #endif
 
@@ -68,7 +69,7 @@ static int _media_key_init(void)
 {
 	if (_media_key_initialized)
 		return 0;
-#if X11
+#if defined(X11)
 	ecore_x_init(NULL);
 
 	win = ecore_x_window_input_new(ecore_x_window_root_first_get(), 0, 0, 1, 1);
@@ -88,7 +89,7 @@ static int _media_key_init(void)
 
 static void _media_key_fini(void)
 {
-#if X11
+#if defined(X11)
 	ecore_x_window_free(win);
 	ecore_x_shutdown();
 #endif
@@ -141,7 +142,7 @@ static Eina_Bool _media_key_release_cb(void *data, int type, void *event)
 	return ECORE_CALLBACK_RENEW;
 }
 
-#if X11
+#if defined(X11)
 static int _grab_media_key(void)
 {
 	int i;
@@ -193,7 +194,7 @@ int media_key_reserve(media_key_event_cb callback, void *user_data)
 			return MEDIA_KEY_ERROR_OPERATION_FAILED;
 	}
 
-#if X11
+#if defined(X11)
 	ret = _grab_media_key();
 #else
 	ret = 0;
@@ -226,7 +227,7 @@ int media_key_release(void)
 		LOGI("media key is not reserved");
 		return MEDIA_KEY_ERROR_NONE;
 	}
-#if X11
+#if defined(X11)
 	ret = _ungrab_media_key();
 #else
 	ret = 0;

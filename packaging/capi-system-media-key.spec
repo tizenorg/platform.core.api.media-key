@@ -27,7 +27,7 @@ BuildRequires:  pkgconfig(utilX)
 
 %package devel
 Summary:  A Media Key library in SLP C API (Development)
-Group:    Development/API
+Group:    System/API
 Requires: %{name} = %{version}-%{release}
 
 %description devel
