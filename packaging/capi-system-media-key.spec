@@ -19,6 +19,8 @@ BuildRequires:  pkgconfig(evas)
 %if %{with x}
 BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(utilX)
+%else if{with wayland}
+BuildRequires:  pkgconfig(ecore-wayland)
 %endif
 
 %description
