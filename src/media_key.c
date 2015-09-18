@@ -24,6 +24,8 @@
 #if defined(X11)
 #include <Ecore_X.h>
 #include <utilX.h>
+#elif defined(WAYLAND)
+#include <Ecore_Wayland.h>
 #endif
 
 #include <dlog.h>
@@ -81,6 +83,8 @@ static int _media_key_init(void)
 	ecore_x_icccm_title_set(win, "media key receiver");
 	ecore_x_netwm_name_set(win, "media key receiver");
 	ecore_x_netwm_pid_set(win, getpid());
+#elif defined(WAYLAND)
+	ecore_wl_init(NULL);
 #endif
 	_media_key_initialized = 1;
 
@@ -92,6 +96,8 @@ static void _media_key_fini(void)
 #if defined(X11)
 	ecore_x_window_free(win);
 	ecore_x_shutdown();
+#elif defined(WAYLAND)
+	ecore_wl_shutdown();
 #endif
 	_media_key_initialized = 0;
 }
@@ -142,13 +148,18 @@ static Eina_Bool _media_key_release_cb(void *data, int type, void *event)
 	return ECORE_CALLBACK_RENEW;
 }
 
-#if defined(X11)
 static int _grab_media_key(void)
 {
 	int i;
+#if defined(X11)
 	int ret;
+#elif defined(WAYLAND)
+	Eina_Bool ret;
+#endif
+
 
 	for (i = 0; media_keys[i].key_str; i++) {
+#if defined(X11)
 		ret = utilx_grab_key(ecore_x_display_get(), win,
 				media_keys[i].key_str, OR_EXCLUSIVE_GRAB);
 		if (ret < 0) {
@@ -159,6 +170,17 @@ static int _grab_media_key(void)
 
 			return ret;
 		}
+#elif defined(WAYLAND)
+		ret = ecore_wl_window_keygrab_set(NULL, media_keys[i].key_str,
+				0, 0, 0, ECORE_WL_WINDOW_KEYGRAB_OVERRIDE_EXCLUSIVE);
+		if (ret != EINA_TRUE) {
+			LOGE("failed to grab key: %s", media_keys[i].key_str);
+			for (i = i - 1; i >= 0; i--)
+				ecore_wl_window_keygrab_unset(NULL, media_keys[i].key_str, 0, 0);
+
+			return -1;
+		}
+#endif
 	}
 
 	return 0;
@@ -167,18 +189,27 @@ static int _grab_media_key(void)
 static int _ungrab_media_key(void)
 {
 	int i;
+#if defined(X11)
 	int ret;
+#elif defined(WAYLAND)
+	Eina_Bool ret;
+#endif
 
 	for (i = 0; media_keys[i].key_str; i++) {
+#if defined(X11)
 		ret = utilx_ungrab_key(ecore_x_display_get(), win,
 				media_keys[i].key_str);
 		if (ret)
 			LOGE("failed to ungrab key: %s", media_keys[i].key_str);
+#elif defined(WAYLAND)
+		ret = ecore_wl_window_keygrab_unset(NULL, media_keys[i].key_str, 0, 0);
+		if (ret != EINA_TRUE)
+			LOGE("failed to ungrab key: %s", media_keys[i].key_str);
+#endif
 	}
 
 	return 0;
 }
-#endif
 
 int media_key_reserve(media_key_event_cb callback, void *user_data)
 {
@@ -194,11 +225,7 @@ int media_key_reserve(media_key_event_cb callback, void *user_data)
 			return MEDIA_KEY_ERROR_OPERATION_FAILED;
 	}
 
-#if defined(X11)
 	ret = _grab_media_key();
-#else
-	ret = 0;
-#endif
 	if (ret) {
 		LOGE("reserve media key error [%d]", ret);
 		return MEDIA_KEY_ERROR_OPERATION_FAILED;
@@ -227,11 +254,8 @@ int media_key_release(void)
 		LOGI("media key is not reserved");
 		return MEDIA_KEY_ERROR_NONE;
 	}
-#if defined(X11)
+
 	ret = _ungrab_media_key();
-#else
-	ret = 0;
-#endif
 	if (ret) {
 		LOGE("release media key error [%d]", ret);
 		return MEDIA_KEY_ERROR_OPERATION_FAILED;
