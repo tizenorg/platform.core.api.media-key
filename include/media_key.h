@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Samsung Electronics Co., Ltd All Rights Reserved
+ * Copyright (c) 2011 - 2016 Samsung Electronics Co., Ltd All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,7 @@
 #include <tizen.h>
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /**
@@ -39,8 +38,7 @@ extern "C"
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 
-typedef enum
-{
+typedef enum {
 	MEDIA_KEY_ERROR_NONE = TIZEN_ERROR_NONE,                           /**< Successful */
 	MEDIA_KEY_ERROR_INVALID_PARAMETER = TIZEN_ERROR_INVALID_PARAMETER, /**< Invalid parameter */
 	MEDIA_KEY_ERROR_OPERATION_FAILED = TIZEN_ERROR_MEDIA_KEY | 0x01,   /**< Reserve/Release failed */
@@ -51,8 +49,7 @@ typedef enum
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
+typedef enum {
 	MEDIA_KEY_PLAY,          /**< Play key */
 	MEDIA_KEY_STOP,          /**< Stop key */
 	MEDIA_KEY_PAUSE,         /**< Pause key */
@@ -70,8 +67,7 @@ typedef enum
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
+typedef enum {
 	MEDIA_KEY_STATUS_PRESSED,  /**< Pressed status */
 	MEDIA_KEY_STATUS_RELEASED, /**< Released status */
 	MEDIA_KEY_STATUS_UNKNOWN,  /**< Unknown status */
@@ -130,4 +126,3 @@ int media_key_release(void);
 #endif
 
 #endif /* __TIZEN_SYSTEM_MEDIA_KEY_H__ */
-
